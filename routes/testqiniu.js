@@ -17,7 +17,7 @@ function uptoken(bucketname) {
   //putPolicy.callbackUrl = 'http://localhost/qiniu/callback';
   //putPolicy.callbackBody = callbackBody;
   putPolicy.returnUrl = 'http://localhost:3000/qiniu/callback';
-  putPolicy.returnBody ='name=$(fname)&hash=$(etag)&key=$(key)&type=$(mimeType)';
+  putPolicy.returnBody ='{"key":"$(key)", "name":"$(fname)", "type":"$(mimeType)", "hash":"$(etag)"}';//'name=$(fname)&hash=$(etag)&key=$(key)&type=$(mimeType)';
   //putPolicy.asyncOps = asyncOps;
   //putPolicy.expires = expires;
 
@@ -34,7 +34,7 @@ router.get('/', function(req, res, next) {
 
   res.render('testqiniu', {
     token : qiniuToken,
-    key : 'rickytest'
+    key : 'rickytest1'
   });
   //res.send('respond with a resource');
 });
@@ -47,19 +47,15 @@ router.get('/callback', function(req, res, next){
   // var s = b.toString('utf8');
 
   var s = Utils.convertEncode(p.query.upload_ret, 'base64', 'utf8')
-  var param = URL.parse(s, true).query;
+  var paramjson = JSON.parse(s);
+  console.log("paramjson.name: " + paramjson.name);
+  console.log("paramjson.key: " + paramjson.key);
+  console.log("paramjson.hash: " + paramjson.hash);
+  console.log("paramjson.type: " + paramjson.type);
+  //var param = URL.parse(s, true).query;
 
-  //var fileJson = JSON.parse(s);
-  console.log('URL.parse(s, true): ' + URL.parse(s, true));
-  console.log('param.name: ' + param.name);
-  console.log('param.hash: ' + param.hash);
-  console.log('param.key: ' + param.key);
-  console.log('param.type: ' + param.type);
   console.log(s);
-  //console.log
-  // console.log('req.url: ' + req.url);
-  // console.log(p);
-  // console.log(p.query.upload_ret);
+
   console.log('callback auccess');
   res.send('callback page after upload to qiniu.');
 });
