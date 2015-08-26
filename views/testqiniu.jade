@@ -1,0 +1,11 @@
+doctype html
+html(lang='en')
+  head
+    title Jade
+  body
+    h1 七牛上传文件DEMO
+    form(method='post', action='http://upload.qiniu.com/', enctype='multipart/form-data')
+      input(name='file', type='file')
+      input(name='token', type='hidden', value='#{token}')
+      input(name='key', type='hidden', value='#{key}')
+      input(name='btnUp', type='submit', value='上传')
